@@ -16,6 +16,7 @@
     "dotenv": "^8.1.0",
     "express": "^4.17.1",
     "glob": "^7.1.4",
+    "isarray": "^2.0.5",
     "mkdirp": "^0.5.1",
     "mongoose": "^5.6.11",
     "process-nextick-args": "^2.0.1",
