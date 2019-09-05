@@ -33,13 +33,13 @@ class HomePage extends Component {
             todo_completed: true
         };
 
-        axios.post('http://localhost:4000/todos/add', newTodo).then(res => console.log(res.data)).catch(console.log)
+        axios.post('/todos/add', newTodo).then(res => console.log(res.data)).catch(console.log)
 
     }
 
     handleAddData = () => {
         this.setState({ initial: false, addData: true, headerText: "Add data to Blockchain" });
-        axios.get('http://localhost:4000/todos').then(res => console.log(res.data)).catch(console.log)
+        axios.get('/todos').then(res => console.log(res.data)).catch(console.log)
 
     }
 
