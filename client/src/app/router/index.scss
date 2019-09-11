@@ -2,6 +2,9 @@
     // height: 100vh;
     height:100%;
 }
+.ant-layout{
+    background-color: transparent;
+}
 .layout-header{
     // height:6vh;
 }
@@ -11,7 +14,7 @@
     // overflow-y: auto;
     scroll-behavior: smooth;
     position: relative;
-    background-color: #F8F8FD;    
+    // background-color: #F8F8FD;    
     // margin-top:6.4rem;
 }
 

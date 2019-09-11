@@ -1,0 +1,57 @@
+
+  .editor {
+    margin: 1rem auto;
+    max-width: 700px;
+
+    &__close__icon{
+        transition: transform .2s; /* Animation */
+        opacity: 0.4;
+        font-size: 40px;
+    }
+
+    &__title{
+        input{
+            font-size: 35px;
+            height: 70px;
+        }
+        margin: 20px 0px;
+    }
+
+    &__button{
+        margin: 10px 0;
+    }
+    &__select__tag{
+        margin: 10px 0;
+    }
+
+    &__preview{
+        p{
+            margin: 0;
+        }
+        img{
+            margin: 10px 0;
+            width: 100%;
+        }
+    }
+  }
+  
+  .ql-container {
+    border-bottom-left-radius: 0.5em;
+    border-bottom-right-radius: 0.5em;
+    background: #fefcfc;
+  }
+  .editor .ql-editor {
+    height: 20em;
+  }
+
+  .editor__close__icon:hover{
+    color: gray;
+    cursor: pointer;
+    opacity: 0.6;
+    transform: scale(1.05);
+}
+  
+  .themeSwitcher {
+    margin-top: 0.5em;
+    font-size: small;
+  }

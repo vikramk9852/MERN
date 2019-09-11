@@ -7,8 +7,6 @@ import axios from 'axios';
 import './index.scss';
 import "antd/dist/antd.css";
 
-const displayIcon = <Icon type="retweet" />
-
 class HomePage extends Component {
 
     constructor(props) {
@@ -33,13 +31,13 @@ class HomePage extends Component {
             todo_completed: true
         };
 
-        axios.post('/todos/add', newTodo).then(res => console.log(res.data)).catch(console.log)
+        axios.post('/api/add', newTodo).then(res => console.log(res.data)).catch(console.log)
 
     }
 
     handleAddData = () => {
         this.setState({ initial: false, addData: true, headerText: "Add data to Blockchain" });
-        axios.get('/todos').then(res => console.log(res.data)).catch(console.log)
+        axios.get('/api/getTodo').then(res => console.log(res.data)).catch(console.log)
 
     }
 

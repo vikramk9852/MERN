@@ -1,0 +1,59 @@
+
+// .story{
+//     max-width: 700px;
+//     margin: 0 auto;
+
+//     &__edit{
+//         position: fixed;
+//         height: 100vh;
+//         line-height: 100vh;
+//         transition: transform 0.2s; /* Animation */
+//         i{
+//             margin-left: -50px;
+//             opacity: 0.4;
+//             font-size: 40px;
+//         }
+//     }
+// }
+
+// .story__edit:hover{
+//     cursor: pointer;
+//     opacity: 1;
+//     transform: scale(1.1);
+// }
+
+.stories{
+    max-width: 1020px;
+    margin: 0 auto;
+
+    &__heading{
+        margin-top: 50px;
+        margin-bottom: 20px;
+    }
+
+    &__contents{
+        margin: 0 50px;
+
+        &__story{
+            height: 120px;
+            padding-top: 15px;
+            border-bottom: 1px solid rgba(88, 24, 24, 0.2);
+            overflow: hidden;
+            p{
+                margin-bottom: 0.5em !important;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            &__pointer{
+                cursor: pointer;
+            }
+
+            &__action__icon{
+                margin: 0 10px;
+                display: inline;
+            }
+        }
+    }
+}
