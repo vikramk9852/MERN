@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import { Icon, Row, Col } from 'antd';
-import Menu from '../Menu';
+import Menu from '../CustomDropDown';
 import './index.scss';
 const paths = ["editor?new", "stories", "profile", "logout"];
 

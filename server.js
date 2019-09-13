@@ -101,6 +101,7 @@ routes.route('/updateBlog/:id').post(function (req, res) {
             blog.blog_publish_date = req.body.blog_publish_date;
             blog.blog_data = req.body.blog_data;
             blog.blog_description = req.body.blog_description;
+            blog.blog_state = req.body.blog_state;
 
             blog.save().then(blog => {
                 res.json('Blog updated!');

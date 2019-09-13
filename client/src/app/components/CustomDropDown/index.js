@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom'
 import { Menu, Dropdown, Icon } from 'antd';
-import { withRouter } from 'react-router';
 import './index.scss';
 import "antd/dist/antd.css";
 

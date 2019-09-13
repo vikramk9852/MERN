@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactQuill from 'react-quill'; // ES6
 import 'react-quill/dist/quill.snow.css'; // ES6
 import './index.scss';
-import { Input, Button, Select, Icon, Tooltip, Row, Col } from 'antd';
+import { Input, Button, Select, Icon, Tooltip, Row, Col, message } from 'antd';
 import ReactHtmlParser from 'react-html-parser';
 import Loader from '../Loader';
 import axios from 'axios';
@@ -17,13 +17,16 @@ class Editor extends Component {
             theme: 'snow',
             selectedTag: 'lifestyle',
             showLoader: true,
-            title: ""
+            title: "",
+            draftText: "Draft",
+            submitText: "Submit"
         }
     }
 
     componentDidMount() {
         let url = this.props.location.search;
         let info = url.split('?');
+        this.storyId = info[2];
         if (info[1] === "update") {
             axios.get(`/api/${info[2]}`).then(res => {
                 let story = res.data;
@@ -31,15 +34,18 @@ class Editor extends Component {
                     editorHtml: story.blog_data,
                     selectedTag: story.blog_category,
                     title: story.blog_title,
-                    showLoader: false
+                    publishDate: story.blog_publish_date,
+                    showLoader: false,
+                    draftText: "Archive",
+                    submitText: "Update"
                 });
             }).catch(err => {
                 console.log(err);
                 this.setState({ showLoader: false });
             })
         }
-        else{
-            this.setState({showLoader: false});
+        else {
+            this.setState({ showLoader: false });
         }
     }
 
@@ -49,6 +55,44 @@ class Editor extends Component {
 
     handleTagChange = (value) => {
         this.setState({ selectedTag: value });
+    }
+
+    handleSubmit = (action) => {
+        this.setState({ showLoader: true }, () => {
+            let publishDate = this.state.publishDate;
+            let temp = document.createElement("div");
+            temp.innerHTML = this.state.editorHtml;
+            let sanitized = temp.textContent || temp.innerText;
+            let url = `api/updateBlog/${this.storyId}`;
+            let errorMessage = "Error in updating Story";
+            let successMessage = "Successfully updated the Story";
+
+            if (this.state.submitText === "Submit") {
+                publishDate = new Date();
+                publishDate = publishDate.toDateString();
+                url = "/api/createBlog";
+                errorMessage = "Error in Publishing Story";
+                successMessage = "Succesfully published the Story"
+            }
+
+            let postData = {
+                blog_title: this.state.title,
+                blog_category: this.state.selectedTag,
+                blog_data: this.state.editorHtml,
+                blog_publish_date: publishDate,
+                blog_description: sanitized,
+                blog_state: action
+            }
+
+            axios.post(url, postData).then(res => {
+                message.success(successMessage);
+                this.props.history.goBack();
+            }).catch(err => {
+                message.error(errorMessage)
+                this.setState({ showLoader: false });
+            })
+        })
+
     }
 
     render() {
@@ -83,31 +127,17 @@ class Editor extends Component {
                         <Button
                             className="editor__button"
                             style={{ marginRight: "20px" }}
-                            onClick={() => {
-                                this.props.returnBack(
-                                    {
-                                        blog_title: this.state.title,
-                                        blog_data: this.state.editorHtml,
-                                        blog_category: this.state.selectedTag,
-                                    }, "draft")
-                            }}
+                            onClick={()=>{this.handleSubmit("draft")}}
                         >
-                            Draft
-                </Button>
+                            {this.state.draftText}
+                        </Button>
 
                         <Button
                             className="editor__button"
-                            onClick={() => {
-                                this.props.returnBack(
-                                    {
-                                        blog_title: this.state.title,
-                                        blog_data: this.state.editorHtml,
-                                        blog_category: this.state.selectedTag
-                                    }, "post")
-                            }}
+                            onClick={()=>{this.handleSubmit("publish")}}
                         >
-                            Submit
-                </Button>
+                            {this.state.submitText}
+                        </Button>
                         {this.state.editorHtml != initialString &&
                             <Row>
                                 <Col>
@@ -128,12 +158,14 @@ class Editor extends Component {
 Editor.modules = {
     toolbar: [
         [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
-        [{ size: [] }],
+        [{ size: ['large', 'huge', 'small', 'normal'] }],
         ['bold', 'italic', 'underline', 'strike', 'blockquote'],
         [{ 'list': 'ordered' }, { 'list': 'bullet' },
         { 'indent': '-1' }, { 'indent': '+1' }],
         ['link', 'image', 'video'],
-        ['clean'],
+        [{ 'color': [] }, { 'background': [] }],
+        [{ 'align': [] }],
+        ['clean']
     ],
     clipboard: {
         // toggle to add extra line breaks when pasting HTML:
@@ -145,6 +177,7 @@ Editor.formats = [
     'header', 'font', 'size',
     'bold', 'italic', 'underline', 'strike', 'blockquote',
     'list', 'bullet', 'indent',
+    'color', 'background', 'align',
     'link', 'image', 'video'
 ]
 

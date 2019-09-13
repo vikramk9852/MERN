@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Button, Row, Col, Icon, PageHeader, message } from 'antd';
-import Menu from '../../components/Menu';
 import axios from 'axios';
 import Stories from '../Stories';
 import Header from '../../components/Header';

@@ -32,10 +32,6 @@ class Story extends Component {
         })
     }
 
-    handleEditStory=()=>{
-        
-    }
-
     render() {
         return (
             <div className="story">

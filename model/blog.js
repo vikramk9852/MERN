@@ -16,6 +16,9 @@ let Blog = new Schema({
     },
     blog_data: {
         type: String
+    },
+    blog_state: {
+        type: String
     }
 });
 
