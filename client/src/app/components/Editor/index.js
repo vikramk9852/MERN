@@ -6,8 +6,17 @@ import { Input, Button, Select, Icon, Tooltip, Row, Col, message } from 'antd';
 import ReactHtmlParser from 'react-html-parser';
 import Loader from '../Loader';
 import axios from 'axios';
+import Utils from '../../utils/utils';
 const { Option } = Select;
 const initialString = "<p><br></p>";
+
+function imageHandler(image, callback) {
+    var range = Editor.quillRef.getEditor().getSelection();
+    var value = prompt('What is the image URL');
+    if (value) {
+        Editor.quillRef.getEditor().insertEmbed(range.index, 'image', value, "user");
+    }
+}
 
 class Editor extends Component {
     constructor(props) {
@@ -50,6 +59,7 @@ class Editor extends Component {
     }
 
     handleEditorTextChange = (html) => {
+        console.log(Editor.quillRef)
         this.setState({ editorHtml: html });
     }
 
@@ -60,9 +70,6 @@ class Editor extends Component {
     handleSubmit = (action) => {
         this.setState({ showLoader: true }, () => {
             let publishDate = this.state.publishDate;
-            let temp = document.createElement("div");
-            temp.innerHTML = this.state.editorHtml;
-            let sanitized = temp.textContent || temp.innerText;
             let url = `api/updateBlog/${this.storyId}`;
             let errorMessage = "Error in updating Story";
             let successMessage = "Successfully updated the Story";
@@ -80,8 +87,11 @@ class Editor extends Component {
                 blog_category: this.state.selectedTag,
                 blog_data: this.state.editorHtml,
                 blog_publish_date: publishDate,
-                blog_description: sanitized,
                 blog_state: action
+            }
+
+            if (this.state.submitText === "Submit") {
+                postData.blog_writer = Utils.getFromLocalStorage('userId');
             }
 
             axios.post(url, postData).then(res => {
@@ -116,7 +126,7 @@ class Editor extends Component {
                             bounds={'.editor'}
                             placeholder="Start writing something"
                             defaultValue={this.state.editorHtml}
-                        />
+                            ref={(el) => Editor.quillRef = el} />
                         <div className="editor__select__tag">
                             <Select defaultValue={this.state.selectedTag} placeholder="Select Tag for this story" style={{ width: 200 }} onChange={this.handleTagChange}>
                                 <Option value="lifestyle">LifeStyle</Option>
@@ -127,14 +137,14 @@ class Editor extends Component {
                         <Button
                             className="editor__button"
                             style={{ marginRight: "20px" }}
-                            onClick={()=>{this.handleSubmit("draft")}}
+                            onClick={() => { this.handleSubmit("draft") }}
                         >
                             {this.state.draftText}
                         </Button>
 
                         <Button
                             className="editor__button"
-                            onClick={()=>{this.handleSubmit("publish")}}
+                            onClick={() => { this.handleSubmit("publish") }}
                         >
                             {this.state.submitText}
                         </Button>
@@ -156,21 +166,38 @@ class Editor extends Component {
 }
 
 Editor.modules = {
-    toolbar: [
-        [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
-        [{ size: ['large', 'huge', 'small', 'normal'] }],
-        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-        [{ 'list': 'ordered' }, { 'list': 'bullet' },
-        { 'indent': '-1' }, { 'indent': '+1' }],
-        ['link', 'image', 'video'],
-        [{ 'color': [] }, { 'background': [] }],
-        [{ 'align': [] }],
-        ['clean']
-    ],
-    clipboard: {
-        // toggle to add extra line breaks when pasting HTML:
-        matchVisual: false,
+    // formula: true,
+    toolbar: {
+        container: [
+            [{ 'font': [] }, { size: ['huge', 'large', 'small'] }],
+            ['bold', 'italic', 'underline', 'blockquote'],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' },
+            { 'indent': '-1' }, { 'indent': '+1' }, {'align': []}],
+            [{ 'color': [] }, { 'background': [] }],
+            ['link', 'image'],
+            ['clean']],
+        handlers: {
+            'image': imageHandler
+        }
     }
+    // toolbar: [
+    //     [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+    //     [{ size: ['large', 'huge', 'small', 'normal'] }],
+    //     ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    //     [{ 'list': 'ordered' }, { 'list': 'bullet' },
+    //     { 'indent': '-1' }, { 'indent': '+1' }],
+    //     ['link', 'image', 'video'],
+    //     [{ 'color': [] }, { 'background': [] }],
+    //     [{ 'align': [] }],
+    //     ['clean']
+    // ],
+    // clipboard: {
+    //     // toggle to add extra line breaks when pasting HTML:
+    //     matchVisual: false,
+    // },
+    // handlers: {
+    //     'image': imageHandler
+    // }
 }
 
 Editor.formats = [
@@ -181,4 +208,5 @@ Editor.formats = [
     'link', 'image', 'video'
 ]
 
+// Editor.imageHandler = imageHandler;
 export default Editor;

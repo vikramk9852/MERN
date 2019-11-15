@@ -54,10 +54,14 @@ class Stories extends Component {
             text = "Draft";
             archive = "Publish";
         }
+
+        let temp = document.createElement("div");
+        temp.innerHTML = story.blog_data;
+        let sanitized = temp.textContent || temp.innerText;
         return (
             <div className="stories__contents__story" key={story._id}>
                 <b className="stories__contents__story__pointer" onClick={() => { this.props.history.push(`/story?${story._id}`) }}><span className="ql-size-large">{story.blog_title}</span></b>
-                <p className="stories__contents__story__pointer" onClick={() => { this.props.history.push(`/story?${story._id}`) }}>{ReactHtmlParser(story.blog_description)}</p>
+                <p className="stories__contents__story__pointer" onClick={() => { this.props.history.push(`/story?${story._id}`) }}>{ReactHtmlParser(sanitized)}</p>
                 <p><span style={{ marginRight: "10px" }}>Published on: {story.blog_publish_date}</span>
                     <span onClick={() => {
                         this.setState({ blogData: story })
@@ -106,10 +110,10 @@ class Stories extends Component {
             axios.post(`/api/deleteBlog/${postData._id}`).then(res => {
                 message.success("Successfully deleted the story");
                 this.fetchData();
-                this.setState({ showLoader: false });
+                this.setState({ showLoader: false, showDeleteDialogue: false });
             }).catch(err => {
                 message.err("Error in deleting the story");
-                this.setState({ showLoader: false });
+                this.setState({ showLoader: false, showDeleteDialogue: false });
             })
         })
     }
